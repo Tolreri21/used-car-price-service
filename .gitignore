@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+
+# ML: данные и артефакты
+data/*
+!data/.gitkeep
+models/*
+!models/.gitkeep
+*.csv
+*.pkl
+
+  # Notebooks
+.ipynb_checkpoints/
