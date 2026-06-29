@@ -44,4 +44,7 @@ mae = mean_absolute_error(y_test , prediction)
 print(rmse)
 print(mae)
 
-joblib.dump({"model": model, "encoder": enc, "scaler": scaler}, "../models/model.joblib")
+joblib.dump({"model": model, "encoder": enc,
+             "scaler": scaler, "num_cols": list(num_cols),
+             "cat_cols": list(cat_cols)},
+            "../models/model.joblib")
