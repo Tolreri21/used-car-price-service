@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 from joblib import load
 from fastapi import FastAPI
-
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from app.schemas import CarFeatures
 
 ml = {}
@@ -22,6 +23,8 @@ async def lifespan(app : FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.mount("/static" , StaticFiles(directory="app/static"),name = "static")
+
 @app.post("/predict")
 def predict(car : CarFeatures):
     car_df = pd.DataFrame([car.model_dump()])
@@ -32,8 +35,6 @@ def predict(car : CarFeatures):
     cat_cols = ml["cat"]
     num_cols = ml["num"]
 
-
-
     car_n = scaler.transform(car_df[num_cols])
     car_c = enc.transform(car_df[cat_cols])
 
@@ -41,3 +42,11 @@ def predict(car : CarFeatures):
 
     pred = model.predict(car_predict)
     return {"predicted_price" : float(pred[0])}
+
+@app.get("/")
+def index():
+    return FileResponse("app/static/index.html")
+
+@app.get("/app")
+def app_page():
+    return FileResponse("app/static/app.html")
