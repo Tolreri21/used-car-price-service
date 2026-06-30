@@ -1,0 +1,14 @@
+# Env
+.venv/
+
+# ML
+data/
+notebooks/
+tests/
+
+# Git
+.gitignore
+.git
+
+# Python
+__pycache__/
