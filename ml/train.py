@@ -8,13 +8,13 @@ from sklearn.model_selection import RandomizedSearchCV
 
 
 X_train = pd.read_csv("../data/train_features.csv")
-y_train = pd.read_csv("../data/train_labels.csv")
+y_train = pd.read_csv("../data/train_labels.csv").squeeze("columns")
 
 X_test = pd.read_csv("../data/test_features.csv")
-y_test = pd.read_csv("../data/test_labels.csv")
+y_test = pd.read_csv("../data/test_labels.csv").squeeze("columns")
 
 X_val = pd.read_csv("../data/val_features.csv")
-y_val = pd.read_csv("../data/val_labels.csv")
+y_val = pd.read_csv("../data/val_labels.csv").squeeze("columns")
 
 preprocessor = load("../models/preprocessor.joblib")
 
