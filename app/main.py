@@ -29,9 +29,8 @@ def predict(car : CarFeatures,session : Session = Depends(get_session)):
     car_df = pd.DataFrame([car.model_dump()])
 
     model = ml["pipe"]["full"]
-    car_transformed = model.transform(car_df)
 
-    pred = model.predict(car_transformed)
+    pred = model.predict(car_df)
 
     row = PredictionHistory(**car.model_dump() , predicted_price = float(pred[0]))
 
