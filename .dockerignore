@@ -3,7 +3,7 @@
 
 # ML
 data/
-notebooks/
+ml/notebooks/
 tests/
 
 # Git
