@@ -1,50 +1,95 @@
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.pipeline import Pipeline
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error
-import joblib
+from joblib import load, dump
+from sklearn.model_selection import RandomizedSearchCV
 
-# load data inside pandas dataframe
-df = pd.read_csv("../data/cars.csv")
-print(df.head(5))
 
-# preprocessing
-df = df.dropna()
-df.info()
-scaler = StandardScaler()
-enc = OneHotEncoder(drop="first", handle_unknown="ignore", sparse_output=False)
+X_train = pd.read_csv("../data/train_features.csv")
+y_train = pd.read_csv("../data/train_labels.csv").squeeze("columns")
 
-# ML
-x_cols = df.columns.drop("price_usd")
-y = "price_usd"
-print(x_cols , y)
+X_test = pd.read_csv("../data/test_features.csv")
+y_test = pd.read_csv("../data/test_labels.csv").squeeze("columns")
 
-X_train, X_test, y_train , y_test = train_test_split(df[x_cols],df[y],test_size= 0.2, random_state=42 )
-model = RandomForestRegressor(random_state=42)
+X_val = pd.read_csv("../data/val_features.csv")
+y_val = pd.read_csv("../data/val_labels.csv").squeeze("columns")
 
-num_cols = X_train.select_dtypes(include="number").columns
-cat_cols = X_train.select_dtypes(include="object").columns
+preprocessor = load("../models/preprocessor.joblib")
 
-x_t_scaled = scaler.fit_transform(X_train[num_cols])
-x_t_enc    = enc.fit_transform(X_train[cat_cols])
+models = {"forest" : RandomForestRegressor(random_state=42),
+          "ridge" : Ridge(random_state=42),
+          "linear" : LinearRegression()
+          }
 
-x_test_scaled = scaler.transform(X_test[num_cols])
-x_test_enc    = enc.transform(X_test[cat_cols])
+for name , model in models.items():
+    print(name)
+    model.fit(X_train,y_train)
+    pred = model.predict(X_val)
+    rmse = root_mean_squared_error(y_val,pred)
+    mae = mean_absolute_error(y_val,pred)
+    print(rmse)
+    print(mae)
 
-X_train_prep = np.hstack([x_t_scaled, x_t_enc])
-X_test_prep  = np.hstack([x_test_scaled, x_test_enc])
 
-model.fit(X_train_prep, y_train)
+forest_params = {
+        "n_estimators":[100,300,500],
+        "max_depth":[5,8,12],
+        "min_samples_split":[2,5],
+        "min_samples_leaf": [1,5],
+}
 
-prediction = model.predict(X_test_prep)
-rmse = root_mean_squared_error(y_test , prediction)
-mae = mean_absolute_error(y_test , prediction)
-print(rmse)
-print(mae)
+ridge_params = {
+        "alpha":[0.01,0.1,1.0,10.0,100.0],
+}
 
-joblib.dump({"model": model, "encoder": enc,
-             "scaler": scaler, "num_cols": list(num_cols),
-             "cat_cols": list(cat_cols)},
-            "../models/model.joblib")
+forest_search = RandomizedSearchCV(
+    param_distributions= forest_params,
+    estimator = RandomForestRegressor(random_state=42),
+    n_iter=15,
+    scoring="neg_root_mean_squared_error",
+    cv=4,
+    random_state=42,
+    n_jobs=-1,
+)
+
+ridge_search = RandomizedSearchCV(
+    param_distributions= ridge_params,
+    estimator = Ridge(random_state=42),
+    n_iter=5,
+    scoring="neg_root_mean_squared_error",
+    cv=4,
+    random_state=42,
+    n_jobs=-1,
+)
+
+full_x = pd.concat([X_train,X_val])
+full_y = pd.concat([y_train,y_val])
+
+searches = {"forest" : forest_search, "ridge" : ridge_search}
+for name , search in searches.items():
+    search.fit(full_x,full_y)
+    print(name)
+    print(search.best_params_)
+    print(search.best_score_)
+
+best_name = max(searches, key=lambda n : searches[n].best_score_)
+best_model = searches[best_name].best_estimator_
+print("Best model:")
+print(best_name)
+
+print("Best model results")
+pred = best_model.predict(X_test)
+rmse = root_mean_squared_error(y_test,pred)
+mae = mean_absolute_error(y_test,pred)
+print(f"RMSE {rmse}")
+print(f"MAE {mae}")
+
+
+full_pipe = Pipeline([
+    ("preprocess" , preprocessor["preprocessor"]),
+    ("model", best_model)
+     ])
+
+dump({"full": full_pipe},"../models/model.joblib")
