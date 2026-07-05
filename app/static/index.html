@@ -6,10 +6,54 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Carpy</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<h1>Carpy - is your best friend when you try to understand how much your car costs</h1>
-<p>using our big dataset of used cars we developed a model which can precisely predict your car price using Machine learning</p>
-<a href="/app">Try prediction</a>
+
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="/" class="nav-brand">Carpy</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/app">Predict</a>
+        </div>
+    </div>
+</nav>
+
+<div class = "container">
+    <div class = "hero">
+        <div class = "hero-text">
+            <h1>Know exactly what your car is worth</h1>
+            <p>Carpy turns thousands of real used-car sales into an instant, data-backed price estimate. No guesswork, no endless scrolling through listings - just a number you can trust, in seconds.</p>
+            <a href="/app">Try prediction</a>
+        </div>
+        <img src="/static/Carpy.png" alt="Not found" class = "hero-img">
+    </div>
+
+    <section class = "section">
+        <h2>Why drivers choose Carpy</h2>
+        <div class = "features">
+            <div class = "feature">
+                <h3>Trained on real data</h3>
+                <p>Our model learns from a large dataset of actual used-car deals, so every estimate reflects the market as it is today - not a dealer's wishful thinking.</p>
+            </div>
+            <div class = "feature">
+                <h3>Instant results</h3>
+                <p>Enter a few details about your car and get a price back in a fraction of a second. No sign-ups, no waiting, no awkward phone calls.</p>
+            </div>
+            <div class = "feature">
+                <h3>Powered by machine learning</h3>
+                <p>Under the hood, Carpy compares several models and picks the most accurate one for the job - so you always get our sharpest guess.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class = "section">
+        <h2>Selling, buying, or just curious?</h2>
+        <p>Whether you're about to put your car on the market, sizing up a deal before you commit, or simply wondering how well your ride has held its value, Carpy gives you a fair starting point. Think of it as a second opinion that has quietly studied thousands of cars just like yours.</p>
+        <p>It only takes a minute. Punch in your car's details and see the number for yourself.</p>
+        <a href="/app">Try prediction</a>
+    </section>
+</div>
 </body>
 </html>
