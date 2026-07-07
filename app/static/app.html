@@ -53,32 +53,70 @@
 
     <div class = "field">
         <label for="fuel_type">Fuel type</label>
-        <input type="text" id="fuel_type" name="fuel_type" required>
+        <select id="fuel_type" name="fuel_type" required>
+            <option value="" disabled selected>—</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electric">Electric</option>
+            <option value="Petrol">Petrol</option>
+        </select>
     </div>
 
     <div class = "field">
         <label for="brand">Brand</label>
-        <input type="text" id="brand" name="brand" required>
+        <select id="brand" name="brand" required>
+            <option value="" disabled selected>—</option>
+            <option value="BMW">BMW</option>
+            <option value="Chevrolet">Chevrolet</option>
+            <option value="Ford">Ford</option>
+            <option value="Honda">Honda</option>
+            <option value="Hyundai">Hyundai</option>
+            <option value="Kia">Kia</option>
+            <option value="Nissan">Nissan</option>
+            <option value="Tesla">Tesla</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Volkswagen">Volkswagen</option>
+        </select>
     </div>
 
     <div class = "field">
         <label for="transmission">Transmission</label>
-        <input type="text" id="transmission" name="transmission" required>
+        <select id="transmission" name="transmission" required>
+            <option value="" disabled selected>—</option>
+            <option value="Automatic">Automatic</option>
+            <option value="Manual">Manual</option>
+        </select>
     </div>
 
     <div class = "field">
         <label for="color">Color</label>
-        <input type="text" id="color" name="color" required>
+        <select id="color" name="color" required>
+            <option value="" disabled selected>—</option>
+            <option value="Black">Black</option>
+            <option value="Blue">Blue</option>
+            <option value="Gray">Gray</option>
+            <option value="Red">Red</option>
+            <option value="Silver">Silver</option>
+            <option value="White">White</option>
+        </select>
     </div>
 
     <div class = "field">
         <label for="service_history">Service history</label>
-        <input type="text" id="service_history" name="service_history" required>
+        <select id="service_history" name="service_history" required>
+            <option value="" disabled selected>—</option>
+            <option value="Full">Full</option>
+            <option value="Partial">Partial</option>
+            <option value="Unknown">Unknown</option>
+        </select>
     </div>
 
     <div class = "field">
         <label for="insurance_valid">Insurance is valid</label>
-        <input type="text" id="insurance_valid" name="insurance_valid" required>
+        <select id="insurance_valid" name="insurance_valid" required>
+            <option value="" disabled selected>—</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
     </div>
 
     <button type="submit">Predict</button>
