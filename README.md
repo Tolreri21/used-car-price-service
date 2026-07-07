@@ -4,6 +4,8 @@ A web service that predicts a used car's price from its characteristics.
 A machine learning model is trained on a used-car dataset and served through a
 REST API and a small web UI. Predictions are stored in PostgreSQL.
 
+🔗 **Live:** http://52.202.119.93 — deployed on AWS EC2 (Docker Compose).
+
 ## Stack
 
 - **Python 3.10**
