@@ -1,6 +1,7 @@
 services:
   app:
     build: .
+    restart: always
     depends_on:
       - db
     ports:
@@ -9,6 +10,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
   db :
     image: postgres:16
+    restart: always
     environment:
       POSTGRES_USER : ${POSTGRES_USER}
       POSTGRES_PASSWORD : ${POSTGRES_PASSWORD}
