@@ -4,6 +4,10 @@ A web service that predicts a used car's price from its characteristics.
 A machine learning model is trained on a used-car dataset and served through a
 REST API and a small web UI. Predictions are stored in PostgreSQL.
 
+🔗 **Live:** http://52.202.119.93 — deployed on AWS EC2 (Docker Compose).
+
+![Carpy demo](docs/demo.gif)
+
 ## Stack
 
 - **Python 3.10**
@@ -114,22 +118,18 @@ curl -X POST http://127.0.0.1:8000/predict \
 
 ## Docker
 
-The database runs via docker-compose (configured through `.env`):
+The whole stack — API (`app`) + PostgreSQL (`db`) — comes up with one command,
+configured through `.env`:
 
 ```bash
-docker compose up -d          # starts PostgreSQL (service: db)
+docker compose up -d --build     # API on http://localhost:8000
 ```
 
-Build and run the API image:
+The prebuilt API image (built for `linux/amd64`) is published to Docker Hub:
 
 ```bash
-docker build -t carpy .
-docker run -p 8000:8000 carpy
+docker pull tolreri21/carpy:latest
 ```
-
-> `docker-compose.yml` currently defines only the `db` service. Adding the
-> `app` service (so the whole stack comes up with one command) is part of the
-> deployment work — see Status.
 
 ## How it works
 
@@ -163,9 +163,8 @@ docker run -p 8000:8000 carpy
 - [x] Preprocessing + model training (RandomForest vs Ridge, champion selection)
 - [x] Prediction API
 - [x] Prediction history in PostgreSQL (SQLModel)
-- [x] Static frontend (styled landing + prediction form, shared navbar)
-- [x] Dockerfile + docker-compose (db)
-- [ ] `app` service in docker-compose (full stack in one command)
-- [ ] Authentication
-- [ ] Deployment to AWS EC2
+- [x] Static frontend (landing page + prediction form)
+- [x] Dockerfile + full docker-compose stack (`app` + `db` in one command)
+- [x] Image published to Docker Hub (`tolreri21/carpy`)
+- [x] Deployment to AWS EC2
 ```
