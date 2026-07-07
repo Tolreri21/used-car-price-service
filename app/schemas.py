@@ -10,6 +10,15 @@ class CarFeaturesBase(SQLModel):
     accidents_reported: int = Field(ge=0, le=5)
     mileage_kmpl: float = Field(ge=5, le=35)
 
+    fuel_type: str
+    brand: str
+    transmission: str
+    color: str
+    service_history: str
+    insurance_valid: str
+
+
+class CarFeatures(CarFeaturesBase):
     fuel_type: Literal["Diesel", "Electric", "Petrol"]
     brand: Literal[
         "BMW",
@@ -27,7 +36,3 @@ class CarFeaturesBase(SQLModel):
     color: Literal["Black", "Blue", "Gray", "Red", "Silver", "White"]
     service_history: Literal["Full", "Partial", "Unknown"]
     insurance_valid: Literal["Yes", "No"]
-
-
-class CarFeatures(CarFeaturesBase):
-    pass

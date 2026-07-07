@@ -25,7 +25,16 @@ const response = await fetch("/predict", {
 });
 
 if (!response.ok) {
-    document.getElementById("result").textContent = "Ошибка запроса";
+    let message = "Ошибка запроса";
+    try {
+        const error = await response.json();
+        if (Array.isArray(error.detail) && error.detail.length > 0) {
+            const first = error.detail[0];
+            const field = first.loc[first.loc.length - 1];
+            message = `${field}: ${first.msg}`;
+        }
+    } catch (_) { /* тело не JSON — оставляем общее сообщение */ }
+    document.getElementById("result").textContent = message;
     return ;
 }
 
