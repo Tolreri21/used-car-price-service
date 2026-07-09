@@ -12,7 +12,6 @@ __pycache__/
 # ML: данные и артефакты
 data/*
 !data/.gitkeep
-models/*
 !models/.gitkeep
 *.csv
 *.pkl
