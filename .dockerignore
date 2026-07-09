@@ -1,14 +1,22 @@
 # Env
 .venv/
+.env
 
 # ML
 data/
 ml/notebooks/
 tests/
 
+#other
+docs/
+.idea/
+.ruff-cache/
+uv.lock
+
 # Git
 .gitignore
 .git
+.github/
 
 # Python
 __pycache__/
