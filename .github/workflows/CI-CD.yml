@@ -25,24 +25,31 @@ jobs:
         run: ruff check .
 
 
-#  tests:
-#    needs: ruff-linter
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: download repo
-#        uses: actions/checkout@v4
-#
-#      - name: download python
-#        uses: actions/setup-python@v5
-#        with:
-#          python-version: "3.10"
-#          cache: 'pip'
-#
-#      - name: run tests
-#        run:
+  tests:
+    needs: ruff-linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: download repo
+        uses: actions/checkout@v4
+
+      - name: download python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: 'pip'
+      - name: install uv
+        run: pip install uv
+
+      - name: install project dependencies
+        run: uv sync
+
+      - name: run tests
+        env:
+          DATABASE_URL: postgresql://user:pass@localhost:5432/test
+        run: uv run pytest
 
   build-and-push:
-    needs: [ruff-linter] #tests]
+    needs: [ruff-linter, tests]
     runs-on: ubuntu-latest
     steps:
       - name: download repo
