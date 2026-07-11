@@ -16,5 +16,8 @@ data/*
 *.csv
 *.pkl
 
-  # Notebooks
+# Notebooks
 .ipynb_checkpoints/
+
+# Other
+.DS_Store

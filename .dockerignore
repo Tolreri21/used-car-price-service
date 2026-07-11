@@ -12,6 +12,7 @@ docs/
 .idea/
 .ruff-cache/
 uv.lock
+.DS_Store
 
 # Git
 .gitignore
