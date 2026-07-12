@@ -17,7 +17,11 @@ REST API and a small web UI. Predictions are stored in PostgreSQL.
 - **pandas** — data processing
 - **joblib** — saving and loading the model pipeline
 - **PostgreSQL** + **SQLModel** — prediction history storage
+- **Vanilla HTML/CSS/JS** — frontend, no frameworks (self-hosted IBM Plex fonts)
+- **pytest** — tests (schemas, API, ML pipeline)
+- **ruff** — linting
 - **Docker / docker-compose** — containerization
+- **GitHub Actions** — CI/CD: lint → tests → build & push → deploy
 
 ## Project structure
 
@@ -27,16 +31,23 @@ app/
   schemas.py       # Pydantic schema of input features (CarFeatures)
   models.py        # SQLModel table: PredictionHistory
   db.py            # DB engine + session
-  static/          # Frontend: landing (/) + prediction form (/app) + style.css
+  static/          # Frontend: landing (/), prediction form (/app), fonts
 ml/
   train.py         # Loads prepared features, tunes models, saves model.joblib
   notebooks/
     eda.ipynb            # Exploratory data analysis
     preprocessing.ipynb  # Split + fit ColumnTransformer, write features + preprocessor
+tests/
+  conftest.py      # Fixtures: TestClient with in-memory SQLite override
+  test_schemas.py  # Input validation rules
+  test_api.py      # /predict endpoint behaviour
+  test_pipeline.py # Loaded model pipeline sanity checks
 data/              # Dataset cars.csv + generated feature/label CSVs (gitignored)
-models/            # model.joblib, preprocessor.joblib (gitignored)
+models/            # model.joblib (committed — the service runs out of the box)
+.github/workflows/
+  CI-CD.yml        # ruff → pytest → docker build+push → deploy to EC2
 Dockerfile
-docker-compose.yml # PostgreSQL service
+docker-compose.yml # app + db (PostgreSQL) services
 pyproject.toml
 requirements.txt   # pinned via `uv export`
 ```
@@ -44,25 +55,11 @@ requirements.txt   # pinned via `uv export`
 ## Quick start
 
 The project uses [uv](https://github.com/astral-sh/uv) (there's a `uv.lock`).
+The trained model is committed, so the service runs without any ML steps:
 
 ```bash
-# install dependencies
 uv sync
-```
-
-The ML pipeline is split into two stages — preprocessing and training:
-
-```bash
-# 1. Preprocessing: run ml/notebooks/preprocessing.ipynb
-#    reads data/cars.csv, splits train/val/test, fits the ColumnTransformer,
-#    writes data/*_features.csv + *_labels.csv and models/preprocessor.joblib
-
-# 2. Train + select the model
-cd ml
-uv run python train.py     # tunes RandomForest & Ridge, saves models/model.joblib
-cd ..
-
-# 3. Run the service
+cp .env.example .env               # fill in DATABASE_URL / POSTGRES_*
 uv run uvicorn app.main:app --reload
 ```
 
@@ -73,9 +70,19 @@ The service starts at `http://127.0.0.1:8000`:
 - `/predict` — POST API endpoint
 - `/docs` — interactive Swagger UI
 
-> The service needs `models/model.joblib`, and training needs `data/cars.csv`.
-> Both `data/` and `models/` are gitignored, so the model must be produced
-> locally (or shipped separately) before starting the service.
+### Retraining the model (optional)
+
+Training needs `data/cars.csv`, which is gitignored:
+
+```bash
+# 1. Preprocessing: run ml/notebooks/preprocessing.ipynb
+#    reads data/cars.csv, splits train/val/test, fits the ColumnTransformer,
+#    writes data/*_features.csv + *_labels.csv and models/preprocessor.joblib
+
+# 2. Train + select the model
+cd ml
+uv run python train.py     # tunes RandomForest & Ridge, saves models/model.joblib
+```
 
 ## API
 
@@ -116,6 +123,17 @@ curl -X POST http://127.0.0.1:8000/predict \
   -d '{"make_year":2015,"engine_cc":1600,"owner_count":2,"accidents_reported":0,"mileage_kmpl":18.5,"fuel_type":"Petrol","brand":"Toyota","transmission":"Manual","color":"White","service_history":"Full","insurance_valid":"Yes"}'
 ```
 
+## Tests
+
+```bash
+uv run pytest
+```
+
+The API tests replace the real database with an in-memory SQLite through
+FastAPI dependency overrides, so no PostgreSQL is needed to run them.
+Covered: schema validation rules, `/predict` happy path and error responses,
+and the serialized pipeline's predictions.
+
 ## Docker
 
 The whole stack — API (`app`) + PostgreSQL (`db`) — comes up with one command,
@@ -130,6 +148,15 @@ The prebuilt API image (built for `linux/amd64`) is published to Docker Hub:
 ```bash
 docker pull tolreri21/carpy:latest
 ```
+
+## CI/CD
+
+Every push to `main` runs `.github/workflows/CI-CD.yml`:
+
+1. **Lint** — `ruff check .`
+2. **Tests** — `pytest` via uv
+3. **Build & push** — Docker image → Docker Hub (`tolreri21/carpy:latest`)
+4. **Deploy** — SSH to the EC2 instance, `docker compose pull && up -d`
 
 ## How it works
 
@@ -163,8 +190,7 @@ docker pull tolreri21/carpy:latest
 - [x] Preprocessing + model training (RandomForest vs Ridge, champion selection)
 - [x] Prediction API
 - [x] Prediction history in PostgreSQL (SQLModel)
-- [x] Static frontend (landing page + prediction form)
+- [x] Frontend: landing + prediction form (vanilla HTML/CSS/JS)
+- [x] Tests: schemas, API, ML pipeline (pytest)
 - [x] Dockerfile + full docker-compose stack (`app` + `db` in one command)
-- [x] Image published to Docker Hub (`tolreri21/carpy`)
-- [x] Deployment to AWS EC2
-```
+- [x] CI/CD: GitHub Actions → Docker Hub → AWS EC2
