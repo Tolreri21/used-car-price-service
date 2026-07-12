@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Carpy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpy — used-car price engine</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -20,40 +18,59 @@
     </div>
 </nav>
 
-<div class = "container">
-    <div class = "hero">
-        <div class = "hero-text">
+<div class="container">
+    <div class="hero">
+        <div class="hero-text">
+            <p class="eyebrow">Used-car price engine</p>
             <h1>Know exactly what your car is worth</h1>
-            <p>Carpy turns thousands of real used-car sales into an instant, data-backed price estimate. No guesswork, no endless scrolling through listings - just a number you can trust, in seconds.</p>
-            <a href="/app">Try prediction</a>
+            <p>Carpy turns thousands of real used-car sales into an instant, data-backed price estimate. No guesswork, no endless scrolling through listings — just a number you can trust, in seconds.</p>
+            <a href="/app" class="btn">Get an estimate</a>
         </div>
-        <img src="/static/Carpy.png" alt="Not found" class = "hero-img">
+        <div class="gauge" role="img" aria-label="Speedometer-style gauge with a price readout">
+            <svg viewBox="0 0 340 190">
+                <path class="arc" d="M31.0 160.0A139 139 0 0 1 309.0 160.0"/>
+                <path class="tick-minor" d="M52.6 147.7L45.7 146.9 M54.6 135.5L47.7 134.0 M57.8 123.5L51.1 121.4 M62.2 112.0L55.8 109.2 M74.5 90.6L68.9 86.5 M82.3 81.0L77.1 76.4 M91.0 72.3L86.4 67.1 M100.6 64.5L96.5 58.9 M122.0 52.2L119.2 45.8 M133.5 47.8L131.4 41.1 M145.5 44.6L144.0 37.7 M157.7 42.6L156.9 35.7 M182.3 42.6L183.1 35.7 M194.5 44.6L196.0 37.7 M206.5 47.8L208.6 41.1 M218.0 52.2L220.8 45.8 M239.4 64.5L243.5 58.9 M249.0 72.3L253.6 67.1 M257.7 81.0L262.9 76.4 M265.5 90.6L271.1 86.5 M277.8 112.0L284.2 109.2 M282.2 123.5L288.9 121.4 M285.4 135.5L292.3 134.0 M287.4 147.7L294.3 146.9"/>
+                <path class="tick-major" d="M59.0 160.0L45.0 160.0 M73.9 104.5L61.7 97.5 M114.5 63.9L107.5 51.7 M170.0 49.0L170.0 35.0 M225.5 63.9L232.5 51.7 M266.1 104.5L278.3 97.5 M281.0 160.0L295.0 160.0"/>
+                <line class="needle" x1="170" y1="160" x2="228.5" y2="85.1"/>
+                <circle class="hub" cx="170" cy="160" r="9"/>
+                <circle class="hub-dot" cx="170" cy="160" r="3"/>
+            </svg>
+            <div class="plate">
+                <span class="plate-band">EST</span>
+                <span class="plate-value">$ 12,480</span>
+            </div>
+        </div>
     </div>
 
-    <section class = "section">
+    <section class="section">
         <h2>Why drivers choose Carpy</h2>
-        <div class = "features">
-            <div class = "feature">
-                <h3>Trained on real data</h3>
-                <p>Our model learns from a large dataset of actual used-car deals, so every estimate reflects the market as it is today - not a dealer's wishful thinking.</p>
+        <div class="features">
+            <div class="feature">
+                <p class="kicker">Real sales data</p>
+                <h3>Trained on real deals</h3>
+                <p>Our model learns from a large dataset of actual used-car sales, so every estimate reflects the market as it is today — not a dealer's wishful thinking.</p>
             </div>
-            <div class = "feature">
+            <div class="feature">
+                <p class="kicker">Sub-second</p>
                 <h3>Instant results</h3>
                 <p>Enter a few details about your car and get a price back in a fraction of a second. No sign-ups, no waiting, no awkward phone calls.</p>
             </div>
-            <div class = "feature">
+            <div class="feature">
+                <p class="kicker">Model selection</p>
                 <h3>Powered by machine learning</h3>
-                <p>Under the hood, Carpy compares several models and picks the most accurate one for the job - so you always get our sharpest guess.</p>
+                <p>Under the hood, Carpy compares several models and picks the most accurate one for the job — so you always get our sharpest estimate.</p>
             </div>
         </div>
     </section>
 
-    <section class = "section">
+    <section class="section">
         <h2>Selling, buying, or just curious?</h2>
         <p>Whether you're about to put your car on the market, sizing up a deal before you commit, or simply wondering how well your ride has held its value, Carpy gives you a fair starting point. Think of it as a second opinion that has quietly studied thousands of cars just like yours.</p>
         <p>It only takes a minute. Punch in your car's details and see the number for yourself.</p>
-        <a href="/app">Try prediction</a>
+        <a href="/app" class="btn">Get an estimate</a>
     </section>
+
+    <footer class="footer">CARPY — machine-learning price estimation</footer>
 </div>
 </body>
 </html>
